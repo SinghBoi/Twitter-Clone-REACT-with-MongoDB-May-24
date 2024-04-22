@@ -9,19 +9,25 @@ mongoose.set("toJSON", {
 });
 
 const userSchema = new mongoose.Schema({
+    name: String,
     email: String,
     password: String, 
-    userName: String, 
-    followings: Array, 
-    followers: Array, 
-    likes: Boolean, 
+    userName: String,
+    about: String,
+    employment: String,
+    homeTown: String,
+    webSite: String,
+    profilePic: String,
 });
 
 const tweetSchema = new mongoose.Schema({
     userName: String, 
-    followings: Array, 
-    followers: Array, 
-    likes: Boolean,
+    postedBy: userSchema,
+    date: Date,
+    comments: [{body:"string", by: mongoose.Schema.Types.ObjectId}],
+    // followings: Array, 
+    // followers: Array, 
+    // likes: Boolean,
 });
 
 const userModel = mongoose.model("UserData", userSchema);

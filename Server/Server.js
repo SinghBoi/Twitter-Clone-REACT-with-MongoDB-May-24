@@ -8,10 +8,42 @@ const app = express();
 app.use(cors()); // middleware för att tillåta extern kommunikation
 app.use(bodyParser.json()); // middleware för att kunna ta emot json format
 
-app.get("/users", async (req, resp) => {
+function validatePassword(password) {
+    const char = /[!@#$%^&*()_+={}\[\];:'"<>,.?/]/;
+    const num = /\d/;
+    const length = 8;
+
+    return password.length >= 8 && char.test(password) && num.test(password);
+}
+
+app.get("/users", async (req, resp) => {  
     try {
-        const users = await userModel.find(); // hämta alla users från databas
-        resp.status(200).json(users);
+        if (!(await userModel.find(`Email:${email}`))) { // hämta alla users från databas
+            return resp.status(401).send("No Such User Exists");
+        }
+
+        resp.status(200).redirect("/Home");
+    } catch (err) {
+        console.log(err.message)
+        resp.status(500).send()
+    }
+});
+
+app.post("/users", async (req, resp) => {
+    const user = new userModel(req.body);
+
+    try {
+        if (await userModel.find(`Email:${email}`)) { // hämta alla users från databas
+            return resp.status(401).send("User Already Exists");
+        }
+
+        if (!validatePassword(password)) {
+        return resp.status(401).send(
+            "Password length must be at least 8 characters, contain one numeric character and one special character"
+        )}
+        
+        const savedUser = await user.save(); // spara en nya user i databas
+        resp.status(201).json(savedUser).redirect("/Login");
     } catch (err) {
         console.log(err.message)
         resp.status(500).send()
@@ -38,18 +70,6 @@ app.get("/users/:id", async (req, resp) => {
         user.likes = likes;
         }
         resp.status(200).json(user);
-    } catch (err) {
-        console.log(err.message)
-        resp.status(500).send()
-    }
-});
-
-app.post("/users", async (req, resp) => {
-    try {
-        const user = new userModel(req.body);
-        const savedUser = await user.save(); // spara en nya user i databas
-        await userModel.updateMany({ _id: req.body.followings }, { $push: { followings: user.id } });
-        resp.status(201).json(savedUser);
     } catch (err) {
         console.log(err.message)
         resp.status(500).send()
