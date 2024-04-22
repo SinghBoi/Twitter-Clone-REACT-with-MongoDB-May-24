@@ -9,18 +9,22 @@ mongoose.set("toJSON", {
 });
 
 const userSchema = new mongoose.Schema({
-    email: String, // dogBook i databasen ska ha "Name" property av typen String
-    userName: String, // dogBook i databasen ska ha "Nick" property av typen String
-    followers: Array, // dogBook i databasen ska ha "Friends" property av typen Array
+    email: String,
+    password: String, 
+    userName: String, 
+    followings: Array, 
+    followers: Array, 
+    likes: Boolean, 
 });
 
 const tweetSchema = new mongoose.Schema({
-    email: String, // dogBook i databasen ska ha "Name" property av typen String
-    userName: String, // dogBook i databasen ska ha "Nick" property av typen String
-    followers: Array, // dogBook i databasen ska ha "Friends" property av typen Array
+    userName: String, 
+    followings: Array, 
+    followers: Array, 
+    likes: Boolean,
 });
 
-const UserModel = mongoose.model("User", userSchema);
-const TweetModel = mongoose.model("Tweet", tweetSchema);
+const userModel = mongoose.model("UserData", userSchema);
+const tweetModel = mongoose.model("TweetData", tweetSchema);
 
-export { UserModel, TweetModel }; // skapa model och exportera
+export { userModel, tweetModel }; // skapa model och exportera
