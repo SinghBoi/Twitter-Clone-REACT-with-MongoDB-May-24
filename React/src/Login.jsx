@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Context } from "./Provider";
 import "./Login.css";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const id = useParams().id
+  const { getAll, getOne } = useContext(Context);
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({ email: "", password: "", });
+
+  useEffect(() => {
+        async function main() {
+            const user = await getAll();
+            setFormData(user);
+        }
+        main();
+    }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -15,9 +26,11 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
+    await getOne(id)
+    navigate("/home/:id")
   };
 
   return (

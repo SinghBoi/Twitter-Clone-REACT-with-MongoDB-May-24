@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema({
     employment: String,
     homeTown: String,
     webSite: String,
-    profilePic: String,
 });
 
 const tweetSchema = new mongoose.Schema({
