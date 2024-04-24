@@ -10,8 +10,8 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/Home/:id" element={<Home />} />
-        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/home/:id" element={<Home />} />
+        <Route path="/signUp" element={<SignUp />} />
         <Route path="/profile/:id" element={<Profile />} />
       </Routes>
     </Router>
