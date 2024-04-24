@@ -1,170 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
+import "./Home.css";
 
-export default function Home() {
+const Home = () => {
+  const [tweets, setTweets] = useState([]);
+  const [hashtags, setHashtags] = useState([
+    "#programming",
+    "#technology",
+    "#coding",
+    "#reactjs",
+    "#javascript",
+  ]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [newTweet, setNewTweet] = useState("");
+  const [username, setUsername] = useState("current_user");
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    // Implement search functionality here
+  };
 
-    return (
-        <div>
+  const handleTweetSubmit = (e) => {
+    e.preventDefault();
+    if (newTweet.trim() === "") return;
+    const updatedTweets = [
+      ...tweets,
+      { id: tweets.length + 1, text: newTweet, user: username },
+    ];
+    setTweets(updatedTweets);
+    setNewTweet("");
+  };
 
+  return (
+    <div className="home-container">
+      <div className="tweets-container">
+        <h2>Latest Tweets</h2>
+        <form onSubmit={handleTweetSubmit} className="tweet-form">
+          <textarea
+            value={newTweet}
+            onChange={(e) => setNewTweet(e.target.value)}
+            placeholder="What's happening?"
+            maxLength={140}
+            className="tweet-input"
+          />
+          <button type="submit" className="tweet-button">
+            Tweet
+          </button>
+        </form>
+        {tweets.map((tweet) => (
+          <div key={tweet.id} className="tweet">
+            <p className="tweet-user">@{tweet.user}</p>
+            <p>{tweet.text}</p>
+          </div>
+        ))}
+      </div>
+      <div className="sidebar">
+        <input
+          type="text"
+          placeholder="Search"
+          value={searchQuery}
+          onChange={handleSearch}
+          className="search-input"
+        />
+        <div className="trending-hashtags">
+          <h3>Trending Hashtags</h3>
+          <ul>
+            {hashtags.map((tag, index) => (
+              <li key={index}>{tag}</li>
+            ))}
+          </ul>
         </div>
-    );
-}
+      </div>
+    </div>
+  );
+};
 
-
-
-// const mongoose = require("mongoose");
-// const Schema = mongoose.Schema;
-// const Service = ("./Service.jsx");
-
-// //  Getters and Setters
-// const setTags = tags => tags.map(t => t.toLowerCase());
-
-// // Tweet Schema
-// const TweetSchema = new Schema(
-//   {
-//     body: { type: String, default: "", trim: true, maxlength: 280 },
-//     user: { type: Schema.ObjectId, ref: "User" },
-//     comments: [
-//       {
-//         body: { type: String, default: "", maxlength: 280 },
-//         user: { type: Schema.ObjectId, ref: "User" },
-//         commenterName: { type: String, default: "" },
-//         commenterPicture: { type: String, default: "" },
-//         createdAt: { type: Date, default: Date.now }
-//       }
-//     ],
-//     tags: { type: [String], set: setTags },
-//     favorites: [{ type: Schema.ObjectId, ref: "User" }],
-//     favoriters: [{ type: Schema.ObjectId, ref: "User" }], // same as favorites
-//     favoritesCount: Number,
-//     createdAt: { type: Date, default: Date.now }
-//   },
-//   { usePushEach: true }
-// );
-
-// // Pre save hook
-// TweetSchema.pre("save", function(next) {
-//   if (this.favorites) {
-//     this.favoritesCount = this.favorites.length;
-//   }
-//   if (this.favorites) {
-//     this.favoriters = this.favorites;
-//   }
-//   next();
-// });
-
-// // Validations in the schema
-// TweetSchema.path("body").validate(
-//   body => body.length > 0,
-//   "Tweet body cannot be blank"
-// );
-
-// TweetSchema.virtual("_favorites").set(function(user) {
-//   if (this.favorites.indexOf(user._id) === -1) {
-//     this.favorites.push(user._id);
-//   } else {
-//     this.favorites.splice(this.favorites.indexOf(user._id), 1);
-//   }
-// });
-
-// TweetSchema.methods = {
-//   uploadAndSave: function(images, callback) {
-//     // const imager = new Imager(imagerConfig, "S3");
-//     const self = this;
-//     if (!images || !images.length) {
-//       return this.save(callback);
-//     }
-//     imager.upload(
-//       images,
-//       (err, cdnUri, files) => {
-//         if (err) {
-//           return callback(err);
-//         }
-//         if (files.length) {
-//           self.image = { cdnUri: cdnUri, files: files };
-//         }
-//         self.save(callback);
-//       },
-//       "article"
-//     );
-//   },
-//   addComment: function(user, comment, cb) {
-//     if (user.name) {
-//       this.comments.push({
-//         body: comment.body,
-//         user: user._id,
-//         commenterName: user.name,
-//         commenterPicture: user.github.avatar_url
-//       });
-//       this.save(cb);
-//     } else {
-//       this.comments.push({
-//         body: comment.body,
-//         user: user._id,
-//         commenterName: user.username,
-//         commenterPicture: user.github.avatar_url
-//       });
-
-//       this.save(cb);
-//     }
-//   },
-
-//   removeComment: function(commentId, cb) {
-//     let index = Service.indexof(this.comments, { id: commentId });
-//     if (~index) {
-//       this.comments.splice(index, 1);
-//     } else {
-//       return cb("not found");
-//     }
-//     this.save(cb);
-//   }
-// };
-
-// // ## Static Methods in the TweetSchema
-// TweetSchema.statics = {
-//   // Load tweets
-//   load: function(id, callback) {
-//     this.findOne({ _id: id })
-//       .populate("user", "name username provider github")
-//       .populate("comments.user")
-//       .exec(callback);
-//   },
-//   // List tweets
-//   list: function(options) {
-//     const criteria = options.criteria || {};
-//     return this.find(criteria)
-//       .populate("user", "name username provider github")
-//       .sort({ createdAt: -1 })
-//       .limit(options.perPage)
-//       .skip(options.perPage * options.page);
-//   },
-//   // List tweets
-//   limitedList: function(options) {
-//     const criteria = options.criteria || {};
-//     return this.find(criteria)
-//       .populate("user", "name username")
-//       .sort({ createdAt: -1 })
-//       .limit(options.perPage)
-//       .skip(options.perPage * options.page);
-//   },
-//   // Tweets of User
-//   userTweets: function(id, callback) {
-//     this.find({ user: ObjectId(id) })
-//       .toArray()
-//       .exec(callback);
-//   },
-
-//   // Count the number of tweets for a specific user
-//   countUserTweets: function(id, callback) {
-//     return this.find({ user: id })
-//       .countDocuments()
-//       .exec(callback);
-//   },
-
-//   // Count the app tweets by criteria
-//   countTweets: function(criteria) {
-//     return this.find(criteria).countDocuments();
-//   }
-// };
-
-// mongoose.model("Tweet", TweetSchema);
+export default Home;
