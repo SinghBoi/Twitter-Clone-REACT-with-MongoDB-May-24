@@ -12,11 +12,11 @@ const userSchema = new mongoose.Schema({
     name: String,
     email: String,
     password: String, 
-    userName: String,
+    username: String,
     about: String,
     employment: String,
-    homeTown: String,
-    webSite: String,
+    hometown: String,
+    website: String,
 });
 
 const tweetSchema = new mongoose.Schema({

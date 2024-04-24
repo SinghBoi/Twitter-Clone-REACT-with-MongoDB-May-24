@@ -15,6 +15,38 @@ const getAll = async () => {
     }
 };
 
+const login = async (userData) => {
+    try {
+        const resp = await axios.post("http://localhost:9000/login", userData);
+        if (resp.status !== 200) {
+            throw new Error("Malfunctioning server GET request");
+        }
+        return resp.data;
+    } catch (err) {
+        console.error(err.message);
+        return null;
+    }
+};
+
+const signUp = async (newUser) => {
+    try {
+        if (newUser.password === newUser.verifyPassword) {
+            delete newUser.verifyPassword
+            const resp = await axios.post("http://localhost:9000/signUp", newUser);
+            console.log(resp.status)
+            if (resp.status !== 201) {
+                throw new Error("Malfunctioning server GET request");
+            }
+            return resp.data;
+        } else {
+            throw new Error("Password Mismatch")
+        }
+    } catch (err) {
+        console.error(err.message);
+        return null;
+    }
+};
+
 const getOne = async (id) => {
     try {
         const resp = await axios.get(`${url}/${id}`);
@@ -67,4 +99,4 @@ const remove = async (id) => {
     }
 };
 
-export { getAll, getOne, create, remove, change };
+export { getAll, login, signUp, getOne, create, remove, change };

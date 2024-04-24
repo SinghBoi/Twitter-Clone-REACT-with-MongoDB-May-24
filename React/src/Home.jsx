@@ -5,7 +5,7 @@ export default function Home() {
 
     return (
         <div>
-
+            <h1>Page Under Process</h1>
         </div>
     );
 }

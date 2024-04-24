@@ -21,12 +21,11 @@ app.get("/users", async (req, resp) => {
     resp.status(200).json(users);
 });
 
-app.get("/users/:id", async (req, resp) => {  
+app.post("/login", async (req, resp) => {  
     try {
-        const { id } = req.params;
         const { email, password } = req.body;
-        const user = await userModel.findOne({ _id: id, email: email, password: password });
-
+        const user = await userModel.findOne({ email: email });
+        console.log(user)
         if (!user) { 
             return resp.status(401).send("No Such User Exists");
         }
@@ -42,15 +41,19 @@ app.get("/users/:id", async (req, resp) => {
     }
 });
 
-app.post("/users", async (req, resp) => {
+app.post("/signUp", async (req, resp) => {
     const user = new userModel(req.body);
 
     try {
-        if (!(await userModel.findOne({ email: email }))) {  // Check if email already exists
+        const oldUsers = await userModel.find({ email: req.body.email })
+        console.log(oldUsers)
+        if (oldUsers) {  // Check if email already exists
+            console.log("User Already Exists")
             return resp.status(401).send("User Already Exists");
         }
 
-        if (!validatePassword(password)) { // Validate password (if needed)
+        if (!validatePassword( req.body.password )) { // Validate password (if needed)
+            console.log("Password issues ")
             return resp.status(401).send(
                 "Password must be atleast 8 characters, containing one numeric and one special character"
             )}
