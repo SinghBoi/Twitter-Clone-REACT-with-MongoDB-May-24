@@ -9,7 +9,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ email: "", password: "", });
-  const [error, setError] = useState("")
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,15 +19,15 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const user = await login(formData)
-    console.log(user)
-    if (user) {
-    navigate(`/home/${user.id}`)
-    } else {
-      setError("Invalid Email or Password")
-    }
-  };
+  e.preventDefault();
+  const user = await login(formData);
+  console.log(user);
+  if (user) {
+    navigate(`/home/${user.id}`);
+  } else {
+    alert("Invalid Email or Password");
+  }
+};
 
   return (
     <div className="login-container">
@@ -39,10 +38,7 @@ const Login = () => {
           required />
         <button type="submit">Login</button>
       </form>
-      <div>
-        <br /><br />
-      { error }
-      </div>
+      <br /><br />
       <div className="button">
         <button onClick={() => navigate("/SignUp")}>Register New User</button>
       </div>

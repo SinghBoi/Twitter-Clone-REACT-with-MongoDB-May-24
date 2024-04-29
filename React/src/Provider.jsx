@@ -1,11 +1,11 @@
 import { createContext } from "react";
-import { getAll, login, signUp, getOne, create, change, remove } from "./Service";
+import { getAll, login, signUp, getOne, change, remove } from "./Service";
 
 const Context = createContext();
 
 function Provider({ children }) {
   return (
-    <Context.Provider value={{ getAll, login, signUp, getOne, create, change, remove }}>
+    <Context.Provider value={{ getAll, login, signUp, getOne, change, remove }}>
       {children}
     </Context.Provider>
   );

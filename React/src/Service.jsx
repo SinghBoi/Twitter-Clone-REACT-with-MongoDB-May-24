@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://localhost:9000/users";
+const url = "http://localhost:9000/";
 
 const getAll = async () => {
     try {
@@ -17,7 +17,7 @@ const getAll = async () => {
 
 const login = async (userData) => {
     try {
-        const resp = await axios.post("http://localhost:9000/login", userData);
+        const resp = await axios.post(`${url}login`, userData);
         if (resp.status !== 200) {
             throw new Error("Malfunctioning server GET request");
         }
@@ -32,7 +32,7 @@ const signUp = async (newUser) => {
     try {
         if (newUser.password === newUser.verifyPassword) {
             delete newUser.verifyPassword
-            const resp = await axios.post("http://localhost:9000/signUp", newUser);
+            const resp = await axios.post(`${url}signUp`, newUser);
             console.log(resp.status)
             if (resp.status !== 201) {
                 throw new Error("Malfunctioning server GET request");
@@ -49,7 +49,7 @@ const signUp = async (newUser) => {
 
 const getOne = async (id) => {
     try {
-        const resp = await axios.get(`${url}/${id}`);
+        const resp = await axios.get(`${url}profile/${id}`);
         if (resp.status !== 200) {
             throw new Error("Malfunctioning server GET request");
         }
@@ -60,22 +60,9 @@ const getOne = async (id) => {
     }
 };
 
-const create = async (newUser) => {
-    try {
-        const resp = await axios.post(url, newUser);
-        if (resp.status !== 201) {
-            throw new Error("Malfunctioning server POST request");
-        }
-        return resp.data;
-    } catch (err) {
-        console.error(err.message);
-        return null;
-    }
-};
-
 const change = async (id, userData) => {
     try {
-        const resp = await axios.put(`${url}/${id}`, userData);
+        const resp = await axios.put(`${url}profile/${id}`, userData);
         if (resp.status !== 200) {
             throw new Error("Malfunctioning server PUT request");
         }
@@ -99,4 +86,4 @@ const remove = async (id) => {
     }
 };
 
-export { getAll, login, signUp, getOne, create, remove, change };
+export { getAll, login, signUp, getOne, remove, change };

@@ -30,8 +30,14 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    await signUp(formData)
+    const newUser = await signUp(formData)
+    if (!newUser.password) {    
+      alert("Password must be atleast 8 characters, containing one numeric and one special character")
+    } else if (!newUser.email) {
+      alert("Email Invalid / Already Exists")
+    } else {
     navigate("/")
+    }
   };
 
   return (

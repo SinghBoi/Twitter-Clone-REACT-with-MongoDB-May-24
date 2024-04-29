@@ -16,84 +16,80 @@ function validatePassword(password) {
     return password.length >= 8 && char.test(password) && num.test(password);
 }
 
-app.get("/users", async (req, resp) => {
+app.get("/users", async (req, res) => {
     const users = await userModel.find(); // hämta alla users från databas
-    resp.status(200).json(users);
+    res.status(200).json(users);
 });
 
-app.post("/login", async (req, resp) => {  
+app.post("/login", async (req, res) => {  
     try {
         const { email, password } = req.body;
         const user = await userModel.findOne({ email: email });
-        console.log(user)
         if (!user) { 
-            return resp.status(401).send("No Such User Exists");
+            return res.status(400).json({ error: "No Such User Exists" });
         }
 
         if (password !== user.password) {  // Validate password stored in the database
-            return resp.status(401).send("Invalid Credentials");
+            return res.status(400).json({ error: "Invalid credentials" })
         }
 
-        resp.status(200).json(user);
+        res.status(200).json(user);
     } catch (err) {
         console.error(err.message);
-        resp.status(500).send();
+        res.status(500).json({ error: err.message });
     }
 });
 
-app.post("/signUp", async (req, resp) => {
+app.post("/signUp", async (req, res) => {
     const user = new userModel(req.body);
 
     try {
-        const oldUsers = await userModel.find({ email: req.body.email })
-        console.log(oldUsers)
+        const oldUsers = await userModel.findOne({ email: req.body.email })
         if (oldUsers) {  // Check if email already exists
-            console.log("User Already Exists")
-            return resp.status(401).send("User Already Exists");
+            return res.status(400).json({ error: "Email already exists" });
         }
 
         if (!validatePassword( req.body.password )) { // Validate password (if needed)
             console.log("Password issues ")
-            return resp.status(401).send(
-                "Password must be atleast 8 characters, containing one numeric and one special character"
-            )}
+            return res.status(400).json({
+                error: "Password must be atleast 8 characters, containing one numeric and one special character"
+        })}
         
         const newUser = await user.save(); // Save the new user to the database
-        resp.status(201).json(newUser);
+        res.status(201).json(newUser);
     } catch (err) {
         console.error(err.message);
-        resp.status(500).send();
+        res.status(500).json({ error: err.message });
     }
 });
 
+app.get("/profile/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await userModel.findOne({ _id: id }); // hämta alla users från databas
+        if (user.followers.length) {
+        const query = { _id: { $in: user.followers } };
+        const followers = await userModel.find(query);
+        user.followers = followers; 
+        }
+        if (user.followings.length) {
+        const query = { _id: { $in: user.followings } };
+        const followings = await userModel.find(query);
+        user.followings = followings;
+        }
+        if (user.likes.length) {
+        const query = { _id: { $in: user.likes } };
+        const likes = await userModel.find(query);
+        user.likes = likes;
+        }
+        res.status(200).json(user);
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).send()
+    }
+});
 
-// app.get("/users/:id", async (req, resp) => {
-//     try {
-//         const { id } = req.params;
-//         const user = await userModel.findOne({ _id: id }); // hämta alla users från databas
-//         if (user.followers.length) {
-//         const query = { _id: { $in: user.followers } };
-//         const followers = await userModel.find(query);
-//         user.followers = followers; 
-//         }
-//         if (user.followings.length) {
-//         const query = { _id: { $in: user.followings } };
-//         const followings = await userModel.find(query);
-//         user.followings = followings;
-//         }
-//         if (user.likes.length) {
-//         const query = { _id: { $in: user.likes } };
-//         const likes = await userModel.find(query);
-//         user.likes = likes;
-//         }
-//         resp.status(200).json(user);
-//     } catch (err) {
-//         console.log(err.message)
-//         resp.status(500).send()
-//     }
-// });
-
-// app.put("/users/:id", async (req, resp) => {
+// app.put("/users/:id", async (req, res) => {
 //     try {
 //         const { id } = req.params;
 //         await userModel.updateOne({ _id: id }, req.body); 
@@ -111,23 +107,23 @@ app.post("/signUp", async (req, resp) => {
 //         await userModel.updateMany(query, { $push: { followers: updatedUser.id } });
 //         updatedUser.followers = userFollowers;
 
-//         resp.status(200).json(updatedUser);
+//         res.status(200).json(updatedUser);
 //     } catch (err) {
 //         console.log(err.message)
-//         resp.status(500).send()
+//         res.status(500).send()
 //     }
 // });
 
-// app.delete("/users/:id", async (req, resp) => {
+// app.delete("/users/:id", async (req, res) => {
 //     try { 
 //         const { id } = req.params;
 //         const deletedUser = await userModel.findByIdAndDelete(id); // ta bort en user från databas
 //         await userModel.updateMany({ followings: id }, { $pull: { followings: id } }); // ta bort user från andras followings listor
 //         await userModel.updateMany({ likes: id }, { $pull: { likes: id } }); // ta bort user likes från andras followings listor
-//         resp.status(200).json(deletedUser);
+//         res.status(200).json(deletedUser);
 //     } catch (err) {
 //         console.log(err.message)
-//         resp.status(500).send()
+//         res.status(500).send()
 //     }
 // });
 
