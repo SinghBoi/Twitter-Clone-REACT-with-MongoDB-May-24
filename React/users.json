@@ -1,0 +1,46 @@
+[{
+  "_id": {
+    "$oid": "662e2710fdad18b80e452d90"
+  },
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "s3curePa$$word",
+  "verifyPassword": "s3curePa$$word",
+  "username": "john_doe",
+  "about": "Enthusiastic developer",
+  "employment": "Software Engineer",
+  "hometown": "Stockholm",
+  "website": "https://johndoe.dev",
+  "avatarUrl": "https://picsum.photos/200",
+  "backgroundUrl": "https://picsum.photos/1920/1080"
+},
+{
+  "_id": {
+    "$oid": "662e2710fdad18b80e452d91"
+  },
+  "name": "Alice",
+  "email": "alice@example.com",
+  "password": "password123",
+  "username": "alice01",
+  "about": "A passionate photographer.",
+  "employment": "Freelance Photographer",
+  "hometown": "Stockholm",
+  "website": "https://alicephotos.example.com",
+  "avatarUrl": "https://picsum.photos/200",
+  "backgroundUrl": "https://picsum.photos/1920/1080"
+},
+{
+  "_id": {
+    "$oid": "662e2710fdad18b80e452d92"
+  },
+  "name": "Bob",
+  "email": "bob@example.com",
+  "password": "password456",
+  "username": "bobby",
+  "about": "Love to code.",
+  "employment": "Software Developer",
+  "hometown": "Gothenburg",
+  "website": "https://bobbycodes.example.com",
+  "avatarUrl": "https://picsum.photos/200",
+  "backgroundUrl": "https://picsum.photos/1920/1080"
+}]

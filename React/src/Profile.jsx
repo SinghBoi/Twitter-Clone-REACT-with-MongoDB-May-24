@@ -1,19 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOne } from "./Service";
+import axios from "axios";
 import "./Profile.css";
 
 export default function Profile() {
 	const { id } = useParams();
 	const [user, setUser] = useState(null);
 	const [tweets, setTweets] = useState([]);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		async function fetchUserData() {
-			const userData = await getOne(id);
-			if (userData) {
-				setUser(userData);
-				setTweets(userData.tweets || []);
+			try {
+				const response = await axios.get(`http://localhost:9000/users/${id}`);
+				if (response.data) {
+					setUser({
+						...response.data,
+						coverPhotoUrl: `https://picsum.photos/seed/${response.data.username}/1920/1080`,
+						avatarUrl: `https://picsum.photos/seed/${response.data.username}/200`,
+					});
+					setTweets(response.data.tweets || []);
+				} else {
+					console.error("User not found");
+				}
+			} catch (error) {
+				console.error("Error fetching user:", error);
+			} finally {
+				setLoading(false);
 			}
 		}
 		fetchUserData();
@@ -23,7 +36,6 @@ export default function Profile() {
 		const tweetDate = new Date(dateString);
 		const now = new Date();
 		const secondsPast = (now.getTime() - tweetDate.getTime()) / 1000;
-
 		if (secondsPast < 60) {
 			return `${parseInt(secondsPast)}s`;
 		}
@@ -36,20 +48,16 @@ export default function Profile() {
 			return `${hoursPast}h`;
 		}
 		const daysPast = parseInt(hoursPast / 24);
-		if (daysPast < 7) {
-			return `${daysPast}d`;
-		}
-		return tweetDate.toLocaleDateString();
+		return daysPast < 7 ? `${daysPast}d` : tweetDate.toLocaleDateString();
 	};
 
-	if (!user) {
+	if (loading) {
 		return <div>Loading user profile...</div>;
 	}
 
-	// Ikon-URL:er
-	const locationIconUrl = "/globe-solid.svg";
-	const websiteIconUrl = "/paperclip-solid.svg";
-	const calendarIconUrl = "/calendar-days-solid.svg";
+	if (!user) {
+		return <div>User not found.</div>;
+	}
 
 	return (
 		<div className="profile-container">
@@ -63,19 +71,29 @@ export default function Profile() {
 					/>
 				</div>
 				<div className="profile-info-container">
-					<h1>{user.username}</h1>
-					<h2>@{user.handle}</h2>
-					<p>{user.bio}</p>
+					<h1>@{user.username}</h1>
+					<div className="profile-info-about">
+						<p>{user.about}</p> {/* Användarens om */}
+					</div>
 					<div className="profile-extra-info">
-						<img src={locationIconUrl} alt="Location" className="icon" />
-						<span>{user.location}</span>
-						<img src={websiteIconUrl} alt="Website" className="icon" />
+						<img src="/briefcase-solid.svg" alt="Work" className="icon" />
+						<span>
+							<p>{user.employment}</p> {/* Användarens sysselsättning */}
+						</span>
+						<img src="/globe-solid.svg" alt="Location" className="icon" />
+						<span>
+							<p>{user.hometown}</p> {/* Användarens hemstad */}
+						</span>
+						<img src="/paperclip-solid.svg" alt="Website" className="icon" />
 						<a href={user.website} target="_blank" rel="noopener noreferrer">
-							{user.website}{" "}
+							{user.website}
 						</a>
-
 						<div className="profile-joined">
-							<img src={calendarIconUrl} alt="Joined" className="icon" />
+							<img
+								src="/calendar-days-solid.svg"
+								alt="Joined"
+								className="icon"
+							/>
 							<span>Joined {user.joinedDate}</span>
 						</div>
 					</div>
