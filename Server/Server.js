@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
-import { userModel } from "./Model.js";
+import { userModel, tweetModel } from "./Model.js";
 
 const app = express();
 app.use(cors()); // Middleware för att tillåta extern kommunikation
@@ -31,7 +31,7 @@ app.post("/login", async (req, res) => {
             return res.status(400).json({ error: "Invalid credentials" })
         }
 
-        res.status(200).json(user);
+        res.status(201).json(user);
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ error: err.message });
@@ -61,31 +61,49 @@ app.post("/signUp", async (req, res) => {
     }
 });
 
-app.get("/profile/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const user = await userModel.findOne({ _id: id }); // hämta alla users från databas
-        if (user.followers.length) {
-        const query = { _id: { $in: user.followers } };
-        const followers = await userModel.find(query);
-        user.followers = followers; 
-        }
-        if (user.followings.length) {
-        const query = { _id: { $in: user.followings } };
-        const followings = await userModel.find(query);
-        user.followings = followings;
-        }
-        if (user.likes.length) {
-        const query = { _id: { $in: user.likes } };
-        const likes = await userModel.find(query);
-        user.likes = likes;
-        }
-        res.status(200).json(user);
-    } catch (err) {
-        console.log(err.message)
-        res.status(500).send()
-    }
+app.get("/tweets", async (req, res) => {
+    const tweets = await tweetModel.find(); 
+    res.status(200).json(tweets);
 });
+
+app.post("/tweet", async (req, res) => {
+    console.log(req.body)
+  const tweet = new tweetModel(req.body);
+  
+  try {
+    const newTweet = await tweet.save();
+    res.status(201).json(newTweet);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// app.get("/profile/:id", async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const user = await userModel.findOne({ _id: id }); // hämta alla users från databas
+//         if (user.followers.length) {
+//         const query = { _id: { $in: user.followers } };
+//         const followers = await userModel.find(query);
+//         user.followers = followers; 
+//         }
+//         if (user.followings.length) {
+//         const query = { _id: { $in: user.followings } };
+//         const followings = await userModel.find(query);
+//         user.followings = followings;
+//         }
+//         if (user.likes.length) {
+//         const query = { _id: { $in: user.likes } };
+//         const likes = await userModel.find(query);
+//         user.likes = likes;
+//         }
+//         res.status(200).json(user);
+//     } catch (err) {
+//         console.log(err.message)
+//         res.status(500).send()
+//     }
+// });
 
 // app.put("/users/:id", async (req, res) => {
 //     try {

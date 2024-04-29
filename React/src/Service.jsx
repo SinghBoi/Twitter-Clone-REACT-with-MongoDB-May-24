@@ -2,9 +2,22 @@ import axios from "axios";
 
 const url = "http://localhost:9000/";
 
-const getAll = async () => {
+const getUsers = async () => {
     try {
-        const resp = await axios.get(url);
+        const resp = await axios.get(`${url}users`);
+        if (resp.status !== 200) {
+            throw new Error("Malfunctioning server GET request");
+        }
+        return resp.data;
+    } catch (err) {
+        console.error(err.message);
+        return [];
+    }
+};
+
+const getTweets = async () => {
+    try {
+        const resp = await axios.get(`${url}tweets`);
         if (resp.status !== 200) {
             throw new Error("Malfunctioning server GET request");
         }
@@ -18,7 +31,7 @@ const getAll = async () => {
 const login = async (userData) => {
     try {
         const resp = await axios.post(`${url}login`, userData);
-        if (resp.status !== 200) {
+        if (resp.status !== 201) {
             throw new Error("Malfunctioning server GET request");
         }
         return resp.data;
@@ -41,6 +54,20 @@ const signUp = async (newUser) => {
         } else {
             throw new Error("Password Mismatch")
         }
+    } catch (err) {
+        console.error(err.message);
+        return null;
+    }
+};
+
+const tweet = async (tweetData) => {
+    try {
+        console.log(tweetData)
+        const resp = await axios.post(`${url}tweet`, tweetData);
+        if (resp.status !== 201) {
+            throw new Error("Malfunctioning server POST request");
+        }
+        return resp.data;
     } catch (err) {
         console.error(err.message);
         return null;
@@ -86,4 +113,4 @@ const remove = async (id) => {
     }
 };
 
-export { getAll, login, signUp, getOne, remove, change };
+export { getUsers, getTweets, login, signUp, tweet, getOne, remove, change };

@@ -20,10 +20,9 @@ const userSchema = new mongoose.Schema({
 });
 
 const tweetSchema = new mongoose.Schema({
-    userName: String, 
-    postedBy: userSchema,
-    date: Date,
-    comments: [{body:"string", by: mongoose.Schema.Types.ObjectId}],
+    text: String,
+    postedBy: { type: mongoose.Schema.Types.ObjectId, ref: "UserData" },
+    date: { type: Date, default: Date.now }
     // followings: Array, 
     // followers: Array, 
     // likes: Boolean,

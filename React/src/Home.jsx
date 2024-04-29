@@ -1,23 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Context } from "./Provider";
+import Image from "./Images";
 import "./Home.css";
 
 const Home = () => {
-	const [tweets, setTweets] = useState([
-		// Exempeldata om det inte redan finns. Varje tweet behöver ett userId.
-		{
-			id: 1,
-			text: "Hello World!",
-			user: "alice01",
-			userId: "662e2710fdad18b80e452d91",
-		},
-		{
-			id: 2,
-			text: "React is awesome!",
-			user: "bob",
-			userId: "662e2710fdad18b80e452d92",
-		},
-	]);
+const { getUsers, getTweets, tweet } = useContext(Context);
+//   const navigate = useNavigate();
+
+	const [tweets, setTweets] = useState([]);
 	const [hashtags, setHashtags] = useState([
 		"#programming",
 		"#technology",
@@ -28,27 +19,35 @@ const Home = () => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [newTweet, setNewTweet] = useState("");
 	const [username, setUsername] = useState("current_user");
+	useEffect(() => {
+        async function main() {
+            const tweets = await getTweets();
+            const users = await getUsers();
+            setTweets(tweets);
+			setUsername(users)
+        }
+        main();
+    }, [getTweets]);
 
 	const handleSearch = (e) => {
 		setSearchQuery(e.target.value);
 		// Implement search functionality here
 	};
 
-	const handleTweetSubmit = (e) => {
-		e.preventDefault();
-		if (newTweet.trim() === "") return;
-		const updatedTweets = [
-			...tweets,
-			{
-				id: tweets.length + 1,
-				text: newTweet,
-				user: username,
-				userId: "some_new_userId",
-			}, // Lägg till ett verkligt userId här
-		];
-		setTweets(updatedTweets);
-		setNewTweet("");
-	};
+	const handleTweetSubmit = async (e) => {
+    e.preventDefault();
+    if (newTweet.trim() === "") return;
+    try {
+      // Submit the new tweet using your context function
+      await tweet({ userId: user.id, text: newTweet });
+      // Fetch tweets again to update the list with the newly submitted tweet
+      const updatedTweets = await getTweets();
+      setTweets(updatedTweets);
+      setNewTweet("");
+    } catch (error) {
+      console.error("Error submitting tweet:", error);
+    }
+  };
 
 	return (
 		<div className="home-container">
@@ -69,11 +68,7 @@ const Home = () => {
 				{tweets.map((tweet) => (
 					<div key={tweet.id} className="tweet">
 						<Link to={`/profile/${tweet.userId}`}>
-							<img
-								src="/avatar_placeholder.png"
-								alt={`Profile of ${tweet.user}`}
-								className="tweet-avatar"
-							/>
+							<Image/>
 						</Link>
 						<div className="tweet-details">
 							<p className="tweet-user">@{tweet.user}</p>
