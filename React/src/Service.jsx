@@ -17,7 +17,18 @@ const getUsers = async () => {
 
 const getTweets = async () => {
     try {
-        const resp = await axios.get(`${url}tweets`);
+        const userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            console.error('User is not logged in');
+            return [];
+        }
+
+        const resp = await axios.get(`${url}tweets`, {
+            headers: {
+                Authorization: `Bearer ${userId}` // Include the authentication token in the request headers
+            }
+        });
+        
         if (resp.status !== 200) {
             throw new Error("Malfunctioning server GET request");
         }
@@ -28,13 +39,17 @@ const getTweets = async () => {
     }
 };
 
+
 const login = async (userData) => {
     try {
         const resp = await axios.post(`${url}login`, userData);
-        if (resp.status !== 201) {
-            throw new Error("Malfunctioning server GET request");
+        if (resp.status === 201) {
+            // Store authentication token in session storage upon successful login
+            sessionStorage.setItem('userId', resp.data.userId);
+            return resp.data;
+        } else {
+            throw new Error("Login failed");
         }
-        return resp.data;
     } catch (err) {
         console.error(err.message);
         return null;
@@ -62,8 +77,20 @@ const signUp = async (newUser) => {
 
 const tweet = async (tweetData) => {
     try {
-        console.log(tweetData)
-        const resp = await axios.post(`${url}tweet`, tweetData);
+        const userId = sessionStorage.getItem('userId');
+        if (!userId) {
+            console.error('User is not logged in');
+            return null;
+        }
+
+        console.log(tweetData); // Ensure that tweetData contains the necessary information
+
+        const resp = await axios.post(`${url}tweet`, tweetData, {
+            headers: {
+                Authorization: `Bearer ${userId}` // Include the authentication token in the request headers
+            }
+        });
+        
         if (resp.status !== 201) {
             throw new Error("Malfunctioning server POST request");
         }
@@ -74,10 +101,12 @@ const tweet = async (tweetData) => {
     }
 };
 
+
+
 const getOne = async (id) => {
     try {
         const resp = await axios.get(`${url}profile/${id}`);
-        if (resp.status !== 200) {
+        if (resp.status !== 201) {
             throw new Error("Malfunctioning server GET request");
         }
         return resp.data;
@@ -90,7 +119,7 @@ const getOne = async (id) => {
 const change = async (id, userData) => {
     try {
         const resp = await axios.put(`${url}profile/${id}`, userData);
-        if (resp.status !== 200) {
+        if (resp.status !== 201) {
             throw new Error("Malfunctioning server PUT request");
         }
         return resp.data;
@@ -103,7 +132,7 @@ const change = async (id, userData) => {
 const remove = async (id) => {
     try {
         const resp = await axios.delete(`${url}/${id}`);
-        if (resp.status !== 200) {
+        if (resp.status !== 201) {
             throw new Error("Malfunctioning server DELETE request");
         }
         return resp.data;
@@ -114,3 +143,4 @@ const remove = async (id) => {
 };
 
 export { getUsers, getTweets, login, signUp, tweet, getOne, remove, change };
+

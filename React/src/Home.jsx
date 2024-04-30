@@ -18,16 +18,15 @@ const { getUsers, getTweets, tweet } = useContext(Context);
 	]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [newTweet, setNewTweet] = useState("");
-	const [username, setUsername] = useState("current_user");
+	// const [username, setUsername] = useState("current_user");
+
 	useEffect(() => {
         async function main() {
             const tweets = await getTweets();
-            const users = await getUsers();
             setTweets(tweets);
-			setUsername(users)
         }
         main();
-    }, [getTweets]);
+    }, []);
 
 	const handleSearch = (e) => {
 		setSearchQuery(e.target.value);
@@ -37,17 +36,25 @@ const { getUsers, getTweets, tweet } = useContext(Context);
 	const handleTweetSubmit = async (e) => {
     e.preventDefault();
     if (newTweet.trim() === "") return;
-    try {
-      // Submit the new tweet using your context function
-      await tweet({ userId: user.id, text: newTweet });
-      // Fetch tweets again to update the list with the newly submitted tweet
-      const updatedTweets = await getTweets();
-      setTweets(updatedTweets);
-      setNewTweet("");
-    } catch (error) {
-      console.error("Error submitting tweet:", error);
+
+    // Retrieve the userId from the session
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) {
+        console.error('User is not logged in');
+        return;
     }
-  };
+
+    try {
+        // Pass both the newTweet text and userId to the tweet function
+        await tweet(newTweet, userId);
+        // Fetch tweets again to update the list with the newly submitted tweet
+        const updatedTweets = await getTweets();
+        setTweets(updatedTweets);
+        setNewTweet("");
+    } catch (error) {
+        console.error("Error submitting tweet:", error);
+    }
+};
 
 	return (
 		<div className="home-container">

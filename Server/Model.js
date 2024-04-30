@@ -17,18 +17,19 @@ const userSchema = new mongoose.Schema({
     employment: String,
     hometown: String,
     website: String,
+    // followings: Array, 
+    // followers: Array, 
+    // likes: Boolean,
 });
 
 const tweetSchema = new mongoose.Schema({
     text: String,
     postedBy: { type: mongoose.Schema.Types.ObjectId, ref: "UserData" },
     date: { type: Date, default: Date.now }
-    // followings: Array, 
-    // followers: Array, 
-    // likes: Boolean,
 });
 
 const userModel = mongoose.model("UserData", userSchema);
 const tweetModel = mongoose.model("TweetData", tweetSchema);
 
 export { userModel, tweetModel }; // skapa model och exportera
+

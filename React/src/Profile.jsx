@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
+import { Context } from "./Provider";
 import axios from "axios";
 import "./Profile.css";
 
 export default function Profile() {
+	const { getOne } = useContext(Context);
 	const { id } = useParams();
 	const [user, setUser] = useState(null);
 	const [tweets, setTweets] = useState([]);
 	const [loading, setLoading] = useState(true);
 
+
 	useEffect(() => {
 		async function fetchUserData() {
 			try {
-				const response = await axios.get(`http://localhost:9000/users/${id}`);
+				const response = await getOne(id);
 				if (response.data) {
 					setUser({
 						...response.data,

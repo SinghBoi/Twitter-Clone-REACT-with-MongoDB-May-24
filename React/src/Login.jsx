@@ -18,15 +18,21 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  const user = await login(formData);
-  console.log(user);
-  if (user) {
-    navigate(`/home/${user.id}`);
-  } else {
-    alert("Invalid Email or Password");
-  }
+  // In your Login component, handle the login process and store the authentication token upon successful login
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        const user = await login(formData); // Assuming login function is implemented
+        if (user) {
+            sessionStorage.setItem('userId', user.id); // Store user ID in session storage upon successful login
+            navigate(`/home/${user.id}`);
+        } else {
+            alert("Invalid Email or Password");
+        }
+    } catch (error) {
+        console.error("Error logging in:", error);
+        alert("An error occurred while logging in. Please try again later.");
+    }
 };
 
   return (
