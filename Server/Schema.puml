@@ -1,0 +1,28 @@
+@startuml
+
+class User {
+  +String name
+  +String email
+  +String password
+  +String nickname
+  +String about
+  +String occupation
+  +String hometown
+  +String homepage
+  +Date dateOfRegistration
+  +ObjectId[] followers
+  +ObjectId[] following
+}
+
+class Tweet {
+  +String content
+  +ObjectId author
+  +String[] hashtags
+  +Date createdAt
+}
+
+User "1" *-- "*" User : followers
+User "1" *-- "*" User : following
+User "1" --o "*" Tweet : tweets
+
+@enduml

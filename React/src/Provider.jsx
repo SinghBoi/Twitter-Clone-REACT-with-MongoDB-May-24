@@ -1,11 +1,39 @@
 import { createContext } from "react";
-import { getUsers, getTweets, login, signUp, tweet, getOne, change, remove } from "./Service";
+import {
+  signup,
+  login,
+  logout,
+  getSessionUserProfile,
+  getUserProfile,
+  postTweet,
+  getTweets,
+  getUserTweets,
+  getTrendingHashtags,
+  followUser,
+  unfollowUser,
+  search,
+} from "./Service";
 
 const Context = createContext();
 
 function Provider({ children }) {
   return (
-    <Context.Provider value={{ getUsers, getTweets, login, signUp, tweet, getOne, change, remove }}>
+    <Context.Provider
+      value={{
+        signup,
+        login,
+        logout,
+        getSessionUserProfile,
+        getUserProfile,
+        postTweet,
+        getTweets,
+        getUserTweets,
+        getTrendingHashtags,
+        followUser,
+        unfollowUser,
+        search,
+      }}
+    >
       {children}
     </Context.Provider>
   );
