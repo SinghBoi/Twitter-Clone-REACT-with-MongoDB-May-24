@@ -5,17 +5,10 @@ import Image from "./Images";
 import "./Home.css";
 
 const Home = () => {
-  const { getTweets, postTweet } = useContext(Context);
-  //   const navigate = useNavigate();
+  const { getTweets, postTweet, getTrendingHashtags } = useContext(Context);
 
   const [tweets, setTweets] = useState([]);
-  const [hashtags, setHashtags] = useState([
-    "#programming",
-    "#technology",
-    "#coding",
-    "#reactjs",
-    "#javascript",
-  ]);
+  const [hashtags, setHashtags] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [newTweet, setNewTweet] = useState("");
   // const [username, setUsername] = useState("current_user");
@@ -27,6 +20,14 @@ const Home = () => {
     }
     main();
   }, []);
+
+  useEffect(() => {
+    async function main() {
+      const trendingHashtags = await getTrendingHashtags();
+      setHashtags(trendingHashtags.data);
+    }
+    main();
+  }, [tweets]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);

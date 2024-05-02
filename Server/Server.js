@@ -299,7 +299,6 @@ app.get("/search", requireAuth, async (req, res) => {
         username: user.username,
       })),
       tweets: tweets.map((tweet) => {
-        console.log(tweet);
         return {
           id: tweet._id,
           text: tweet.text,
