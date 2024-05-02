@@ -5,17 +5,16 @@ import axios from "axios";
 import "./Profile.css";
 
 export default function Profile() {
-	const { getOne } = useContext(Context);
+	const { getUserProfile } = useContext(Context);
 	const { id } = useParams();
 	const [user, setUser] = useState(null);
 	const [tweets, setTweets] = useState([]);
 	const [loading, setLoading] = useState(true);
 
-
 	useEffect(() => {
 		async function fetchUserData() {
 			try {
-				const response = await getOne(id);
+				const response = await getUserProfile(id);
 				if (response.data) {
 					setUser({
 						...response.data,
@@ -33,7 +32,15 @@ export default function Profile() {
 			}
 		}
 		fetchUserData();
-	}, [id]);
+	}, [id, getUserProfile]);
+
+	if (loading) {
+		return <div>Loading user profile...</div>;
+	}
+
+	if (!user) {
+		return <div>User not found.</div>;
+	}
 
 	const getTimeSince = (dateString) => {
 		const tweetDate = new Date(dateString);
