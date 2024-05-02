@@ -3,14 +3,20 @@ import { Link } from "react-router-dom";
 import { Context } from "./Provider";
 import Image from "./Images";
 import Hashtags from "./components/Hashtags";
+import Search from "./components/Search";
 import "./Home.css";
 
 const Home = () => {
-  const { getTweets, postTweet, getTrendingHashtags } = useContext(Context);
+  const { getTweets, postTweet, getTrendingHashtags, search } =
+    useContext(Context);
 
   const [tweets, setTweets] = useState([]);
+
   const [hashtags, setHashtags] = useState([]);
+
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState({ tweets: [], users: [] });
+
   const [newTweet, setNewTweet] = useState("");
   // const [username, setUsername] = useState("current_user");
 
@@ -30,8 +36,10 @@ const Home = () => {
     main();
   }, [tweets]);
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     setSearchQuery(e.target.value);
+    const searchResult = await search(searchQuery);
+    setSearchResult(searchResult.data);
     // Implement search functionality here
   };
 
@@ -79,12 +87,10 @@ const Home = () => {
         ))}
       </div>
       <div className="sidebar">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={handleSearch}
-          className="search-input"
+        <Search
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          searchResult={searchResult}
         />
         <Hashtags hashtags={hashtags} />
       </div>

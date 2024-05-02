@@ -34,16 +34,6 @@
   cursor: pointer;
 }
 
-.search-input {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.trending-hashtags {
-  border: 1px solid #ccc;
-  padding: 10px;
-}
-
 ul {
   list-style-type: none;
   padding: 0;
