@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "./Provider";
 import Image from "./Images";
+import Hashtags from "./components/Hashtags";
 import "./Home.css";
 
 const Home = () => {
@@ -85,14 +86,7 @@ const Home = () => {
           onChange={handleSearch}
           className="search-input"
         />
-        <div className="trending-hashtags">
-          <h3>Trending Hashtags</h3>
-          <ul>
-            {hashtags.map((tag, index) => (
-              <li key={index}>{tag}</li>
-            ))}
-          </ul>
-        </div>
+        <Hashtags hashtags={hashtags} />
       </div>
     </div>
   );
