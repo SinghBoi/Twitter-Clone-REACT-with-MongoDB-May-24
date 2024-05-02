@@ -298,15 +298,18 @@ app.get("/search", requireAuth, async (req, res) => {
         name: user.name,
         username: user.username,
       })),
-      tweets: tweets.map((tweet) => ({
-        id: tweet._id,
-        text: tweet.text,
-        name: tweet.postedBy.name,
-        userId: tweet.postedBy._id,
-        username: tweet.postedBy.username,
-        hashtags: tweet.hashtags,
-        date: tweet.date,
-      })),
+      tweets: tweets.map((tweet) => {
+        console.log(tweet);
+        return {
+          id: tweet._id,
+          text: tweet.text,
+          name: tweet.postedBy.name,
+          userId: tweet.postedBy._id,
+          username: tweet.postedBy.username,
+          hashtags: tweet.hashtags,
+          date: tweet.date,
+        };
+      }),
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
