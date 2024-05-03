@@ -82,6 +82,11 @@ const Home = () => {
             <div className="tweet-details">
               <p className="tweet-user">@{tweet.username}</p>
               <p>{tweet.text}</p>
+              <p className="tweet-date"><img
+                src="/calendar-days-solid.svg"
+                alt="Joined"
+                className="icon"
+              />{new Date(tweet.date).toLocaleString()}</p>
             </div>
           </div>
         ))}

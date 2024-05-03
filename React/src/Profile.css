@@ -158,6 +158,14 @@ h2 {
 	font-size: smaller;
 }
 
+.tweet-date img.icon{
+	width: 16px;
+	height: 16px;
+	padding: 1px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
 .tweet-content {
 	margin-top: 10px;
 }
