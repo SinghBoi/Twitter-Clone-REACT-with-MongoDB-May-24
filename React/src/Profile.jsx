@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Context } from "./Provider";
-import axios from "axios";
 import "./Profile.css";
 
 export default function Profile() {
-  const { getUserProfile, getUserTweets } = useContext(Context);
+  const { getUserProfile, getUserTweets, followUser, unfollowUser } =
+    useContext(Context);
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [tweets, setTweets] = useState([]);
@@ -48,6 +48,21 @@ export default function Profile() {
     }
     fetchUserTweets();
   }, [id, getUserTweets]);
+
+  const followOrUnfollow = async () => {
+    if (user.isFollowing === true) {
+      await unfollowUser(id);
+    } else {
+      await followUser(id);
+    }
+    const profileResponse = await getUserProfile(id);
+    const profileData = profileResponse.data;
+    setUser({
+      ...profileData,
+      coverPhotoUrl: `https://picsum.photos/seed/${profileData.username}/1920/1080`,
+      avatarUrl: `https://picsum.photos/seed/${profileData.username}/200`,
+    });
+  };
 
   if (loading) {
     return <div>Loading user profile...</div>;
@@ -104,7 +119,7 @@ export default function Profile() {
             </span>
           </div>
         </div>
-        <button className="follow-btn">
+        <button className="follow-btn" onClick={followOrUnfollow}>
           {user.isFollowing ? "Unfollow" : "Follow"}
         </button>
       </div>
