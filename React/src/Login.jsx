@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "./Provider";
-import "./Login.css";
 
 export default function Login () {
   const { login } = useContext(Context);

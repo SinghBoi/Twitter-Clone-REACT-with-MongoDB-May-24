@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { Context } from "./Provider";
 import Hashtags from "./components/Hashtags";
 import Search from "./components/Search";
-import "./Profile.css";
 
 export default function Profile() {
   const { getUserProfile, getUserTweets, followUser, unfollowUser, getTrendingHashtags, search } = useContext(Context);

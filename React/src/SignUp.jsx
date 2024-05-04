@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "./Provider";
-import "./SignUp.css";
 
 export default function SignUp () {
   const { signup } = useContext(Context);
