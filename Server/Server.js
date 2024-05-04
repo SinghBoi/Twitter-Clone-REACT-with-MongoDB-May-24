@@ -110,6 +110,9 @@ app.get("/users/:id", requireAuth, async (req, res) => {
     }
     const followersCount = user.followers.length;
     const followingCount = user.following.length;
+    const isFollowing = user.followers.some(
+      (follower) => follower._id.toString() === req.userId
+    );
     res.status(200).json({
       id: user._id,
       name: user.name,
@@ -122,6 +125,7 @@ app.get("/users/:id", requireAuth, async (req, res) => {
       registrationDate: user.registrationDate,
       followersCount,
       followingCount,
+      isFollowing,
     });
   } catch (err) {
     res.status(500).send();
@@ -181,10 +185,9 @@ app.get("/tweets", requireAuth, async (req, res) => {
 app.get("/tweets/users/:userid", requireAuth, async (req, res) => {
   try {
     const userId = req.params.userid;
-    const tweets = await Tweet.find({ postedBy: userId }).populate(
-      "postedBy",
-      "name username"
-    );
+    const tweets = await Tweet.find({ postedBy: userId })
+      .populate("postedBy", "name username")
+      .sort({ date: -1 });
     res.status(200).json(
       tweets.map((tweet) => ({
         id: tweet._id,
