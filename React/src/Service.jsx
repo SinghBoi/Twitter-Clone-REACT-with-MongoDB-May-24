@@ -50,8 +50,7 @@ const signup = async (newUser) => {
 const login = async (loginData) => {
   try {
     const resp = await api.post(`/login`, loginData);
-    if (resp.status === 200) {
-      // Store authentication token in session storage upon successful login
+    if (resp.status === 200) { // Store authentication token in session storage upon successful login
       sessionStorage.setItem("userId", resp.data.userId);
       return resp.data;
     } else {

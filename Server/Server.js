@@ -33,19 +33,16 @@ app.post("/signup", async (req, res) => {
     const existingUserWithSameEmail = await User.findOne({
       email: req.body.email,
     });
-    if (existingUserWithSameEmail) {
-      // Check if email already exists
+    if (existingUserWithSameEmail) { // Check if email already exists
       return res.status(409).json({ error: "Email already exists" });
     }
     const existingUserWithSameUsername = await User.findOne({
       username: req.body.username,
     });
-    if (existingUserWithSameUsername) {
-      // Check if username already exists
+    if (existingUserWithSameUsername) { // Check if username already exists
       return res.status(409).json({ error: "Username already exists" });
     }
-    if (!validatePassword(req.body.password)) {
-      // Validate password (if needed)
+    if (!validatePassword(req.body.password)) { // Validate password (if needed)
       console.log("Password issues ");
       return res.status(400).json({
         error:
@@ -67,8 +64,7 @@ app.post("/login", async (req, res) => {
     if (!user) {
       return res.status(400).json({ error: "No Such User Exists" });
     }
-    if (password !== user.password) {
-      // Validate password stored in the database
+    if (password !== user.password) { // Validate password stored in the database
       return res.status(400).json({ error: "Invalid credentials" });
     }
     res.status(200).json({ userId: user._id });
@@ -78,8 +74,7 @@ app.post("/login", async (req, res) => {
 });
 
 // Get user profile for the loggedin user
-app.get("/profile", requireAuth, async (req, res) => {
-  // Fetch user profile based on userId from session
+app.get("/profile", requireAuth, async (req, res) => { // Fetch user profile based on userId from session
   const user = await User.findById(req.userId).populate("followers following");
   if (!user) {
     return res.status(404).json({ error: "User not found" });
@@ -135,8 +130,7 @@ app.get("/users/:id", requireAuth, async (req, res) => {
 // Post a new tweet
 app.post("/tweets", requireAuth, async (req, res) => {
   const { text } = req.body;
-  try {
-    // Extract hashtags from the tweet text
+  try { // Extract hashtags from the tweet text
     const words = text.split(" ");
     const hashtags = words
       .filter((word) => word.startsWith("#"))
