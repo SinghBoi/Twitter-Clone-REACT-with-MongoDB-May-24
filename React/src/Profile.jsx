@@ -12,25 +12,29 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchUserData() {
+    async function fetchData() {
       try {
-        const response = await getUserProfile(id);
-        if (response.data) {
+        const profileResponse = await getUserProfile(id);
+
+        const profileData = profileResponse.data;
+
+        if (profileData) {
           setUser({
-           ...response.data,
-            coverPhotoUrl: `https://picsum.photos/seed/${response.data.username}/1920/1080`,
-            avatarUrl: `https://picsum.photos/seed/${response.data.username}/200`,
+            ...profileData,
+            coverPhotoUrl: `https://picsum.photos/seed/${profileData.username}/1920/1080`,
+            avatarUrl: `https://picsum.photos/seed/${profileData.username}/200`,
           });
         } else {
-          console.error("User not found");
+          console.error("User or follower data not found");
         }
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     }
-    fetchUserData();
+
+    fetchData();
   }, [id, getUserProfile]);
 
   useEffect(() => {
@@ -53,25 +57,6 @@ export default function Profile() {
     return <div>User not found.</div>;
   }
 
-  const getTimeSince = (dateString) => {
-    const tweetDate = new Date(dateString);
-    const now = new Date();
-    const secondsPast = (now.getTime() - tweetDate.getTime()) / 1000;
-    if (secondsPast < 60) {
-      return `${parseInt(secondsPast)}s`;
-    }
-    const minutesPast = parseInt(secondsPast / 60);
-    if (minutesPast < 60) {
-      return `${minutesPast}m`;
-    }
-    const hoursPast = parseInt(minutesPast / 60);
-    if (hoursPast < 24) {
-      return `${hoursPast}h`;
-    }
-    const daysPast = parseInt(hoursPast / 24);
-    return daysPast < 7? `${daysPast}d` : tweetDate.toLocaleDateString();
-  };
-
   return (
     <div className="profile-container">
       <img src={user.coverPhotoUrl} alt="Cover" className="profile-cover" />
@@ -86,16 +71,16 @@ export default function Profile() {
         <div className="profile-info-container">
           <h1>@{user.username}</h1>
           <div className="profile-info-about">
-            <p>{user.about}</p> {/* Användarens om */}
+            <p>{user.about}</p>
           </div>
           <div className="profile-extra-info">
             <img src="/briefcase-solid.svg" alt="Work" className="icon" />
             <span>
-              <p>{user.employment}</p> {/* Användarens sysselsättning */}
+              <p>{user.employment}</p>
             </span>
             <img src="/globe-solid.svg" alt="Location" className="icon" />
             <span>
-              <p>{user.hometown}</p> {/* Användarens hemstad*/}
+              <p>{user.hometown}</p>
             </span>
             <img src="/paperclip-solid.svg" alt="Website" className="icon" />
             <a href={user.website} target="_blank" rel="noopener noreferrer">
@@ -107,7 +92,7 @@ export default function Profile() {
                 alt="Joined"
                 className="icon"
               />
-              <span>Joined {user.joinedDate}</span>
+              <span>Joined {user.registrationDate}</span>
             </div>
           </div>
           <div className="profile-stats">
@@ -115,12 +100,12 @@ export default function Profile() {
               <strong>{user.followingCount}</strong> Following
             </span>
             <span>
-              <strong>{user.followerCount}</strong> Followers
+              <strong>{user.followersCount}</strong> Followers
             </span>
           </div>
         </div>
         <button className="follow-btn">
-          {user.isFollowing? "Unfollow" : "Follow"}
+          {user.isFollowing ? "Unfollow" : "Follow"}
         </button>
       </div>
       <div className="tweets-container">
@@ -135,11 +120,14 @@ export default function Profile() {
               <h3>{user.username}</h3>
             </div>
             <p className="tweet-text">{tweet.text}</p>
-            <span className="tweet-date"><img
+            <span className="tweet-date">
+              <img
                 src="/calendar-days-solid.svg"
                 alt="Joined"
                 className="icon"
-              />{new Date(tweet.date).toLocaleString()}</span>
+              />
+              {new Date(tweet.date).toLocaleString()}
+            </span>
           </div>
         ))}
       </div>

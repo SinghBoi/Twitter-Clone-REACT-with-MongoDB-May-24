@@ -120,6 +120,7 @@ app.get("/users/:id", requireAuth, async (req, res) => {
       employment: user.employment,
       hometown: user.hometown,
       website: user.website,
+      registrationDate: user.registrationDate,
       followersCount,
       followingCount,
     });
