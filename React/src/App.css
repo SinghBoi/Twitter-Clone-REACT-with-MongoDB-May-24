@@ -399,3 +399,13 @@ ul li:hover {
 .sign-up-container button:hover {
   background-color: #0056b3;
 }
+
+.trending-hashtags {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.search-input {
+  width: 100%;
+  margin-bottom: 10px;
+}
