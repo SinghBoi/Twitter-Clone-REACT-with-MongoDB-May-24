@@ -1,21 +1,40 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import { Context } from "./Provider";
+import Hashtags from "./components/Hashtags";
+import Search from "./components/Search";
 import "./Profile.css";
 
 export default function Profile() {
-  const { getUserProfile, getUserTweets, followUser, unfollowUser } =
+  const { getUserProfile, getUserTweets, followUser, unfollowUser, getTrendingHashtags, search } =
     useContext(Context);
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [tweets, setTweets] = useState([]);
   const [loading, setLoading] = useState(true);
+	const [hashtags, setHashtags] = useState([]);
+	const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState({ tweets: [], users: [] });
+
+		useEffect(() => {
+    async function main() {
+      const trendingHashtags = await getTrendingHashtags();
+      setHashtags(trendingHashtags.data);
+    }
+    main();
+  }, [tweets]);
+
+	const handleSearch = async (e) => {
+    setSearchQuery(e.target.value);
+    const searchResult = await search(searchQuery);
+    setSearchResult(searchResult.data);
+    // Implement search functionality here
+  };
 
   useEffect(() => {
     async function fetchData() {
       try {
         const profileResponse = await getUserProfile(id);
-
         const profileData = profileResponse.data;
 
         if (profileData) {
@@ -74,6 +93,7 @@ export default function Profile() {
 
   return (
     <div className="profile-container">
+			<div className="profile-content">
       <img src={user.coverPhotoUrl} alt="Cover" className="profile-cover" />
       <div className="profile-body">
         <div className="profile-avatar-container">
@@ -145,6 +165,15 @@ export default function Profile() {
             </span>
           </div>
         ))}
+      </div>
+			</div>
+			 <div className="profile-sidebar">
+        <Search
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          searchResult={searchResult}
+        />
+        <Hashtags hashtags={hashtags} />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
-* {
+/* * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-}
+} */
 
 body,
 html {
@@ -13,6 +13,7 @@ html {
 	max-width: 600px;
 	margin: auto;
 	padding-bottom: 10px;
+	display: flex;
 }
 
 .profile-cover {
@@ -25,7 +26,7 @@ html {
 	display: flex;
 	justify-content: center;
 	margin-top: -50px; /* Half of the avatar image height */
-	align-items: flex-start; /* Align items to the start of the cross axis */
+	align-items: flex-start; 
 }
 
 .profile-avatar-container {
@@ -177,4 +178,23 @@ a {
 
 a:hover {
 	text-decoration: underline;
+}
+
+.profile-sidebar {
+  flex: 1;
+	padding: 50px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+ul li:hover {
+  color: #3577c3;
 }
