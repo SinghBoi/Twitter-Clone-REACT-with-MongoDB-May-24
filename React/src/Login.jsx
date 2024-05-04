@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Context } from "./Provider";
 import "./Login.css";
 
-const Login = () => {
-  // const id = useParams().id
+export default function Login () {
   const { login } = useContext(Context);
   const navigate = useNavigate();
 
@@ -12,10 +11,7 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormData((prevState) => ({ ...prevState, [name]: value, }));
   };
 
   // In your Login component, handle the login process and store the authentication token upon successful login
@@ -39,22 +35,9 @@ const Login = () => {
     <div className="login-container">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
+        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange}
+          required />
         <button type="submit">Login</button>
       </form>
       <br />
@@ -65,5 +48,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;
