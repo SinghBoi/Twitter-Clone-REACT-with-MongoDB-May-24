@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import "./Search.css";
 
-const Search = ({ searchQuery, handleSearch, searchResult }) => {
+export default function Search ({ searchQuery, handleSearch, searchResult }) {
   return (
     <div>
       <input
@@ -25,5 +24,3 @@ const Search = ({ searchQuery, handleSearch, searchResult }) => {
     </div>
   );
 };
-
-export default Search;

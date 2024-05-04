@@ -1,6 +1,4 @@
-import "./Hashtags.css";
-
-const Hashtags = ({ hashtags }) => {
+export default function Hashtags ({ hashtags }) {
   return (
     <div className="trending-hashtags">
       <h3>Trending Hashtags</h3>
@@ -13,4 +11,3 @@ const Hashtags = ({ hashtags }) => {
   );
 };
 
-export default Hashtags;
