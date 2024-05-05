@@ -1,11 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Context } from "./Provider";
+import Footer from "./Footer";
 import Hashtags from "./components/Hashtags";
 import Search from "./components/Search";
 
-export default function Home({ userAvatarUrl }) {
-  const { getTweets, postTweet, getTrendingHashtags, search } = useContext(Context);
+export default function Home () {
+  const { getUserProfile, getTweets, postTweet, getTrendingHashtags, search, logout } = useContext(Context);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [tweets, setTweets] = useState([]);
   const [hashtags, setHashtags] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,6 +22,19 @@ export default function Home({ userAvatarUrl }) {
         getTweets(),
         getTrendingHashtags(),
       ]);
+
+      const profileResponse = await getUserProfile(id);
+        const profileData = profileResponse.data;
+        if (profileData) {
+          setUser({
+            ...profileData,
+            coverPhotoUrl: `https://picsum.photos/seed/${profileData.username}/1920/1080`,
+            avatarUrl: `https://picsum.photos/seed/${profileData.username}/200`,
+          });
+        } else {
+          console.error("User or follower data not found");
+        } 
+
       setTweets(tweetsData);
       setHashtags(trendingHashtagsData.data);
     }
@@ -43,6 +60,15 @@ export default function Home({ userAvatarUrl }) {
       console.error("Error submitting tweet:", error);
     }
   };
+
+  const handleLogout = async () => {
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      await logout();
+      navigate("/");
+    }
+  };
+
 
   return (
     <div className="home-container">
@@ -84,22 +110,7 @@ export default function Home({ userAvatarUrl }) {
         <Hashtags hashtags={hashtags} />
       </div>
       {/* Footer */}
-      <footer className="footer">
-        <div className="user-info">
-          {/* Display user avatar */}
-          <img src={userAvatarUrl} alt="Your Avatar" className="avatar" />
-          {/* You can also display username here */}
-          {/* For example: */}
-          {/* <span className="username">Your Username</span> */}
-          {/* Dropdown button */}
-          <button className="dropdown-button">...</button>
-          {/* Dropdown content */}
-          <div className="dropdown-content">
-            <button>Logout</button>
-            <button>Cancel</button>
-          </div>
-        </div>
-      </footer>
+      <Footer user={user} handleLogout={handleLogout} />
     </div>
   );
 }

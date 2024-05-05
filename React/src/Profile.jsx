@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Context } from "./Provider";
+import Footer from "./Footer";
 import Hashtags from "./components/Hashtags";
 import Search from "./components/Search";
 
@@ -67,9 +68,12 @@ export default function Profile() {
   };
 
   const handleLogout = async () => {
-      await logout;
-      navigate("/")
-  }
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      await logout();
+      navigate("/");
+    }
+  };
 
   if (loading) {
     return <div>Loading user profile...</div>;
@@ -144,17 +148,7 @@ export default function Profile() {
         <Hashtags hashtags={hashtags} />
       </div>
       {/* Footer */}
-      <div className="profile-footer">
-        <div className="footer-left">
-          <img src={user.avatarUrl} alt={user.username} className="footer-avatar" />
-          <div className="username-container">
-            <span>{user.username}</span>
-          </div>  
-        </div>
-        <div className="footer-right">
-          <button className="logout-btn" onClick={handleLogout}>Logout</button>
-        </div>
-      </div>
+      <Footer user={user} handleLogout={handleLogout} />
     </div>
   );
 }
