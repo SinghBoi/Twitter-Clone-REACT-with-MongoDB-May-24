@@ -63,7 +63,7 @@ const login = async (loginData) => {
 };
 
 const logout = () => {
-  sessionStorage.delete("userId");
+  sessionStorage.removeItem("userId");
 };
 
 const getSessionUserProfile = () => {
