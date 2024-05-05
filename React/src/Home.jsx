@@ -5,8 +5,15 @@ import Footer from "./Footer";
 import Hashtags from "./components/Hashtags";
 import Search from "./components/Search";
 
-export default function Home () {
-  const { getUserProfile, getTweets, postTweet, getTrendingHashtags, search, logout } = useContext(Context);
+export default function Home() {
+  const {
+    getUserProfile,
+    getTweets,
+    postTweet,
+    getTrendingHashtags,
+    search,
+    logout,
+  } = useContext(Context);
   const { id } = useParams();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -24,16 +31,16 @@ export default function Home () {
       ]);
 
       const profileResponse = await getUserProfile(id);
-        const profileData = profileResponse.data;
-        if (profileData) {
-          setUser({
-            ...profileData,
-            coverPhotoUrl: `https://picsum.photos/seed/${profileData.username}/1920/1080`,
-            avatarUrl: `https://picsum.photos/seed/${profileData.username}/200`,
-          });
-        } else {
-          console.error("User or follower data not found");
-        } 
+      const profileData = profileResponse.data;
+      if (profileData) {
+        setUser({
+          ...profileData,
+          coverPhotoUrl: `https://picsum.photos/seed/${profileData.username}/1920/1080`,
+          avatarUrl: `https://picsum.photos/seed/${profileData.username}/200`,
+        });
+      } else {
+        console.error("User or follower data not found");
+      }
 
       setTweets(tweetsData);
       setHashtags(trendingHashtagsData.data);
@@ -55,6 +62,8 @@ export default function Home () {
       await postTweet(newTweet); // Fetch tweets again to update the list with the newly submitted tweet
       const updatedTweets = await getTweets();
       setTweets(updatedTweets);
+      const updatedHashtags = await getTrendingHashtags();
+      setHashtags(updatedHashtags.data);
       setNewTweet("");
     } catch (error) {
       console.error("Error submitting tweet:", error);
@@ -68,7 +77,6 @@ export default function Home () {
       navigate("/");
     }
   };
-
 
   return (
     <div className="home-container">
@@ -98,7 +106,11 @@ export default function Home () {
             <div className="tweet-details">
               <p>{tweet.text}</p>
               <p className="tweet-date">
-                <img src="/calendar-days-solid.svg" alt="Joined" className="icon" />
+                <img
+                  src="/calendar-days-solid.svg"
+                  alt="Joined"
+                  className="icon"
+                />
                 {new Date(tweet.date).toLocaleString()}
               </p>
             </div>
@@ -106,7 +118,11 @@ export default function Home () {
         ))}
       </div>
       <div className="sidebar">
-        <Search searchQuery={searchQuery} handleSearch={handleSearch} searchResult={searchResult} />
+        <Search
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          searchResult={searchResult}
+        />
         <Hashtags hashtags={hashtags} />
       </div>
       {/* Footer */}

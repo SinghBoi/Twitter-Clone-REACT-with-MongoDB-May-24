@@ -137,7 +137,7 @@ GET http://localhost:9000/tweets/users/{{user-id-1}}
 Authorization: Bearer {{user-id-2}}
 HTTP 200
 [Asserts]
-jsonpath "$[0].text" == "Hello, world! #first"
+jsonpath "$[0].text" == "Poodles are the best dogs #poodles #dogsarethebest"
 jsonpath "$[0].name" == "User 1"
 jsonpath "$[0].username" == "user1"
 
