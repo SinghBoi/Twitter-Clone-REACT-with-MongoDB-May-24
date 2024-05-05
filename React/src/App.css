@@ -41,6 +41,8 @@
   color: #888;
 }
 
+/* HOME PAGE */
+
 .home-container {
   display: flex;
 }
@@ -96,6 +98,51 @@ ul li:hover {
   /* Adjust this value as needed */
 }
 
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username {
+  flex: 1;
+  /* Take remaining space */
+  text-align: center;
+  /* Center text */
+}
+
+.spacer {
+  flex: 1;
+  /* Take remaining space */
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* LOGIN PAGE */
+
 .login-container {
   max-width: 400px;
   margin: 0 auto;
@@ -142,6 +189,8 @@ ul li:hover {
 .login-container button:hover {
   background-color: #0056b3;
 }
+
+/* PROFILE PAGE */
 
 /* * {
 	margin: 0;
@@ -346,6 +395,56 @@ ul li {
 ul li:hover {
   color: #3577c3;
 }
+
+.profile-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f5f8fa;
+  padding: 10px 20px;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  margin-left: 500px;
+}
+
+.footer-right {
+  margin-right: 500px;
+}
+
+.footer-avatar {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.username-container {
+  display: flex;
+  align-items: center;
+}
+
+.username {
+  margin-right: 10px;
+}
+
+.logout-btn {
+  border: none;
+  background-color: #151515;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* SIGNUP PAGE */
 
 .sign-up-container {
   max-width: 400px;

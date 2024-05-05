@@ -4,7 +4,7 @@ import { Context } from "./Provider";
 import Hashtags from "./components/Hashtags";
 import Search from "./components/Search";
 
-export default function Home ({ userAvatarUrl }) {
+export default function Home({ userAvatarUrl }) {
   const { getTweets, postTweet, getTrendingHashtags, search } = useContext(Context);
   const [tweets, setTweets] = useState([]);
   const [hashtags, setHashtags] = useState([]);
@@ -13,20 +13,20 @@ export default function Home ({ userAvatarUrl }) {
   const [newTweet, setNewTweet] = useState("");
 
   useEffect(() => {
-  async function fetchData() {
-    const [tweetsData, trendingHashtagsData] = await Promise.all([
-      getTweets(),
-      getTrendingHashtags(),
-    ]);
-    setTweets(tweetsData);
-    setHashtags(trendingHashtagsData.data);
-  }
-  fetchData();
-}, [tweets]);
+    async function fetchData() {
+      const [tweetsData, trendingHashtagsData] = await Promise.all([
+        getTweets(),
+        getTrendingHashtags(),
+      ]);
+      setTweets(tweetsData);
+      setHashtags(trendingHashtagsData.data);
+    }
+    fetchData();
+  }, []);
 
   const handleSearch = async (e) => {
     setSearchQuery(e.target.value);
-    const searchResult = await search(searchQuery);
+    const searchResult = await search(e.target.value);
     setSearchResult(searchResult.data); // Implement search functionality here
   };
 
@@ -49,30 +49,57 @@ export default function Home ({ userAvatarUrl }) {
       <div className="tweets-container">
         <h2>Latest Tweets</h2>
         <form onSubmit={handleTweetSubmit} className="tweet-form">
-          <textarea value={newTweet} onChange={(e) => setNewTweet(e.target.value)} placeholder="What's happening?"
-            maxLength={140} className="tweet-input" />
-          <button type="submit" className="tweet-button">Tweet</button>
+          <textarea
+            value={newTweet}
+            onChange={(e) => setNewTweet(e.target.value)}
+            placeholder="What's happening?"
+            maxLength={140}
+            className="tweet-input"
+          />
+          <button type="submit" className="tweet-button">
+            Tweet
+          </button>
         </form>
         {tweets.map((tweet) => (
-  			<div key={tweet.id} className="tweet">
-    		<Link to={`/profile/${tweet.userId}`} className="user-link">
-      			<img src={`https://picsum.photos/seed/${tweet.username}/50`} alt={`Profile of ${tweet.username}`} />
-      			<span className="username">{tweet.username}</span>
-    		</Link>
-    		<div className="tweet-details">
-      		<p>{tweet.text}</p>
-      		<p className="tweet-date">
-        	<img src="/calendar-days-solid.svg" alt="Joined" className="icon" />
-        	{new Date(tweet.date).toLocaleString()}
-      		</p>
-    		</div>
-  		</div>
-		))}
+          <div key={tweet.id} className="tweet">
+            <Link to={`/profile/${tweet.userId}`} className="user-link">
+              <img
+                src={`https://picsum.photos/seed/${tweet.username}/50`}
+                alt={`Profile of ${tweet.username}`}
+              />
+              <span className="username">{tweet.username}</span>
+            </Link>
+            <div className="tweet-details">
+              <p>{tweet.text}</p>
+              <p className="tweet-date">
+                <img src="/calendar-days-solid.svg" alt="Joined" className="icon" />
+                {new Date(tweet.date).toLocaleString()}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
       <div className="sidebar">
         <Search searchQuery={searchQuery} handleSearch={handleSearch} searchResult={searchResult} />
         <Hashtags hashtags={hashtags} />
       </div>
+      {/* Footer */}
+      <footer className="footer">
+        <div className="user-info">
+          {/* Display user avatar */}
+          <img src={userAvatarUrl} alt="Your Avatar" className="avatar" />
+          {/* You can also display username here */}
+          {/* For example: */}
+          {/* <span className="username">Your Username</span> */}
+          {/* Dropdown button */}
+          <button className="dropdown-button">...</button>
+          {/* Dropdown content */}
+          <div className="dropdown-content">
+            <button>Logout</button>
+            <button>Cancel</button>
+          </div>
+        </div>
+      </footer>
     </div>
   );
-};
+}
